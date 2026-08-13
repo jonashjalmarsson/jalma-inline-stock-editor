@@ -3,7 +3,7 @@
  * Plugin Name: Jalma Inline Stock Editor
  * Plugin URI: https://wordpress.org/plugins/jalma-inline-stock-editor/
  * Description: Edit WooCommerce stock quantities and low-stock thresholds directly from a single table — no more clicking into each product. Inline edit, keyboard navigation, category filter, full variation support.
- * Version: 1.1.7
+ * Version: 1.1.8
  * Author: jonashjalmarsson
  * Author URI: https://jonashjalmarsson.se
  * License: GPLv2 or later
@@ -33,7 +33,7 @@ add_action( 'before_woocommerce_init', function () {
 	}
 } );
 
-define( 'JISE_VERSION', '1.1.7' );
+define( 'JISE_VERSION', '1.1.8' );
 define( 'JISE_SLUG', 'jalma-inline-stock-editor' );
 define( 'JISE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'JISE_URL', plugin_dir_url( __FILE__ ) );
@@ -73,13 +73,24 @@ add_action( 'plugins_loaded', function () {
 
 /*
  * Pro upsell — a simple "Get Pro" link in the Plugins-screen row, plus a
- * small pill above the stock table that points users to the Pro landing
- * page. The free plugin does NOT call any external service of its own;
- * the Pro purchase, license activation and install all happen on the
- * project landing page (URL below) and inside the Pro plugin's own
- * License tab once installed. Keeps Free focused on stock editing only.
+ * small pill above the stock table with two plain links: the Pro landing
+ * page, and a direct download of the Pro .zip.
+ *
+ * Both are ordinary <a href> links the user clicks themselves. This plugin
+ * never downloads, installs, activates or updates anything on their behalf —
+ * that would break wp.org guideline 8 ("serving updates or otherwise
+ * installing plugins […] from servers other than WordPress.org's"). It also
+ * contacts no external server of its own: no lemon.js, no phone-home, no
+ * inline script. The purchase and license activation happen on the landing
+ * page or inside the Pro plugin's own License tab once installed.
  */
 const JISE_PRO_LANDING_URL = 'https://jonashjalmarsson.se/plugins/jalma-inline-stock-editor-pro/';
+
+/**
+ * Direct download of the Pro .zip, for people who would rather install first
+ * and buy from inside the Pro plugin. Manual upload only — see above.
+ */
+const JISE_PRO_DOWNLOAD_URL = 'https://plugins.jonashjalmarsson.se/jalma-inline-stock-editor-pro/jalma-inline-stock-editor-pro.zip';
 
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), function ( $links ) {
 	if ( class_exists( 'JISEP\\Tabs' ) ) {
@@ -99,10 +110,16 @@ add_action( 'jise_before_filters', function () {
 	<div class="jise-pro-pill" style="background:#f5f7ff;border:1px solid #d6dffd;border-radius:6px;padding:1em 1.25em;margin:1em 0 1.5em;max-width:760px;">
 		<span style="display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#3858e9;background:#e7ecfb;padding:.15em .55em;border-radius:3px;margin-bottom:.6em;"><?php esc_html_e( 'Pro upgrade', 'jalma-inline-stock-editor' ); ?></span>
 		<p style="margin:.2em 0 .8em;"><?php esc_html_e( 'CSV export and import for product stock data — filter by category, include variations, two-step preview-before-apply flow.', 'jalma-inline-stock-editor' ); ?></p>
-		<p style="margin:0;">
+		<p style="margin:0 0 .6em;">
 			<a class="button" href="<?php echo esc_url( JISE_PRO_LANDING_URL ); ?>" target="_blank" rel="noopener">
 				<?php esc_html_e( 'Learn more →', 'jalma-inline-stock-editor' ); ?>
 			</a>
+			<a class="button" href="<?php echo esc_url( JISE_PRO_DOWNLOAD_URL ); ?>" target="_blank" rel="noopener" style="margin-left:.4em;">
+				<?php esc_html_e( 'Download Pro (.zip)', 'jalma-inline-stock-editor' ); ?>
+			</a>
+		</p>
+		<p style="margin:0;font-size:12px;color:#646970;">
+			<?php esc_html_e( 'Downloaded the zip? Install it yourself under Plugins → Add Plugin → Upload Plugin, then buy or paste your license key on the Pro plugin\'s License tab.', 'jalma-inline-stock-editor' ); ?>
 		</p>
 	</div>
 	<?php

@@ -4,7 +4,7 @@ Tags: bulk edit, stock management, inventory, low stock, woocommerce
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.7
+Stable tag: 1.1.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,9 @@ Not in the free version. A stock adjustment log is planned for the Pro version.
 
 == Changelog ==
 
+= 1.1.8 =
+* The Pro upgrade box now offers a direct download of the Pro add-on's .zip alongside the existing link to its plugin page, so you can install Pro and buy the license from inside it if you prefer. Both are plain links — this plugin still installs, activates and downloads nothing on your behalf, and contacts no external server of its own.
+
 = 1.1.7 =
 * Fixed: search by SKU did not work. The search box said "Search name or SKU…" and this readme advertised SKU search, but only the product name was ever matched — typing a SKU returned nothing. The plugin had assumed WooCommerce's own SKU search would apply to its product query; WooCommerce only enables that on its own product list screen, so it never did. The plugin now runs its own SKU search.
 * Search now matches partial SKUs and ignores letter case, so "bk-08" finds "BK-080".
@@ -140,6 +143,9 @@ Not in the free version. A stock adjustment log is planned for the Pro version.
 * Translation-ready, Swedish (sv_SE) included.
 
 == Upgrade Notice ==
+
+= 1.1.8 =
+The Pro upgrade box now includes a direct download link for the Pro add-on, next to the existing link to its plugin page. Plain links only — nothing is installed or downloaded for you, and no external server is contacted.
 
 = 1.1.7 =
 SKU search actually works now. It was advertised but never functional — only product names were searched. Partial and case-insensitive SKU matching included, variation SKUs too.
