@@ -25,6 +25,7 @@ class JISE_Rest_Controller {
 
 	public function __construct() {
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
+		add_filter( 'posts_search', [ $this, 'add_sku_to_search' ], 10, 2 );
 	}
 
 	public function register_routes() {
@@ -157,11 +158,17 @@ class JISE_Rest_Controller {
 				$args['orderby'] = 'title';
 		}
 
-		// Search on title and SKU
+		// Search on title and SKU.
+		//
+		// The plain `s` argument only searches post title/excerpt/content.
+		// WooCommerce does hook a SKU search onto `posts_search`, but only on
+		// its own product list table screen — it is not active for our REST
+		// query, so `s` alone never matched a SKU. `jise_sku_search` is our own
+		// query var, picked up by add_sku_to_search() below, which ORs a SKU
+		// match onto whatever WP already built for the title search.
 		if ( ! empty( $request['search'] ) ) {
-			$args['s'] = $request['search'];
-			// wc_product_sku_search is injected via WP filter when WC is loaded,
-			// so a plain ?s= hits both title and SKU.
+			$args['s']               = $request['search'];
+			$args['jise_sku_search'] = $request['search'];
 		}
 
 		// Category filter. A tax_query is the correct tool here — users expect
@@ -220,6 +227,80 @@ class JISE_Rest_Controller {
 			'page'     => (int) $args['paged'],
 			'per_page' => (int) $args['posts_per_page'],
 		] );
+	}
+
+	/**
+	 * Add a SKU match to the product search WHERE clause.
+	 *
+	 * Runs on every `posts_search`, but does nothing unless the query carries
+	 * our own `jise_sku_search` query var — set only by list_products(). It is
+	 * additive: the title search WP already generated is kept untouched and the
+	 * SKU match is ORed onto it.
+	 *
+	 * Variations: a SKU like `BK-V01-HC` lives on a variation, not on the
+	 * parent. The product table lists top-level products only and loads
+	 * variations on demand when a row is expanded, so a variation SKU hit is
+	 * mapped back to its parent product ID — that gives the user a row they can
+	 * expand and edit, instead of an orphan variation row with no context.
+	 *
+	 * Performance: the subquery reads `_sku` out of postmeta rather than the
+	 * `wc_product_meta_lookup` table. The lookup table is derived data and can
+	 * be missing rows (stale after imports or direct DB writes) — postmeta is
+	 * the source of truth WooCommerce itself writes to. `meta_key = '_sku'`
+	 * uses the postmeta meta_key index, so the LIKE only scans one row per
+	 * product/variation, not all of postmeta. The leading wildcard is a
+	 * deliberate trade-off: it rules out a pure index range scan, but partial
+	 * SKU search ("BK-08" finding "BK-080", or a mid-SKU fragment) is the
+	 * behaviour the search field promises.
+	 *
+	 * @param string   $search Search SQL fragment.
+	 * @param WP_Query $query  Query object.
+	 * @return string
+	 */
+	public function add_sku_to_search( $search, $query ) {
+		global $wpdb;
+
+		$term = $query->get( 'jise_sku_search' );
+
+		if ( ! is_string( $term ) || trim( $term ) === '' ) {
+			return $search;
+		}
+
+		$like = '%' . $wpdb->esc_like( trim( $term ) ) . '%';
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- built with $wpdb->prepare() below.
+		$sku_subquery = $wpdb->prepare(
+			"SELECT CASE WHEN sp.post_type = 'product_variation' THEN sp.post_parent ELSE sp.ID END
+			FROM {$wpdb->posts} sp
+			INNER JOIN {$wpdb->postmeta} spm ON spm.post_id = sp.ID AND spm.meta_key = '_sku'
+			WHERE spm.meta_value LIKE %s",
+			$like
+		);
+
+		$sku_clause = "{$wpdb->posts}.ID IN ( {$sku_subquery} )";
+
+		// No title search was generated (shouldn't happen, but be safe).
+		if ( trim( $search ) === '' ) {
+			return " AND ( {$sku_clause} )";
+		}
+
+		/*
+		 * WP appends " AND (wp_posts.post_password = '')" to the search clause
+		 * for logged-out visitors. Keep that outside the OR so an unrelated SKU
+		 * match can never expose a password-protected product.
+		 */
+		$password_pattern = '/\s+AND\s+\(\s*' . preg_quote( $wpdb->posts, '/' ) . "\.post_password\s*=\s*''\s*\)\s*$/";
+		$password_clause  = '';
+
+		if ( preg_match( $password_pattern, $search, $matches ) ) {
+			$password_clause = $matches[0];
+			$search          = preg_replace( $password_pattern, '', $search );
+		}
+
+		// Strip the leading AND so the title clause can be re-wrapped.
+		$search = preg_replace( '/^\s*AND\s*/i', '', $search );
+
+		return " AND ( ( {$search} ) OR ( {$sku_clause} ) )" . $password_clause;
 	}
 
 	public function list_variations( $request ) {

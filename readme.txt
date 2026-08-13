@@ -4,7 +4,7 @@ Tags: bulk edit, stock management, inventory, low stock, woocommerce
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.6
+Stable tag: 1.1.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,11 @@ Not in the free version. A stock adjustment log is planned for the Pro version.
 
 == Changelog ==
 
+= 1.1.7 =
+* Fixed: search by SKU did not work. The search box said "Search name or SKU…" and this readme advertised SKU search, but only the product name was ever matched — typing a SKU returned nothing. The plugin had assumed WooCommerce's own SKU search would apply to its product query; WooCommerce only enables that on its own product list screen, so it never did. The plugin now runs its own SKU search.
+* Search now matches partial SKUs and ignores letter case, so "bk-08" finds "BK-080".
+* Variation SKUs are searchable too. A hit on a variation SKU returns the parent product, so the row can be expanded and every variation edited in place.
+
 = 1.1.6 =
 * Removed the in-plugin LemonSqueezy purchase / license / install flow entirely. The free plugin no longer contacts any external service. Pro purchases now happen on the project landing page (https://jonashjalmarsson.se/plugins/jalma-inline-stock-editor-pro/) and Pro itself handles license activation in its own License tab. The "Get Pro" link in the Plugins screen and the upsell card above the stock table now simply open the landing page in a new tab.
 * Removed the External services section from this readme since the free plugin no longer uses any.
@@ -135,6 +140,9 @@ Not in the free version. A stock adjustment log is planned for the Pro version.
 * Translation-ready, Swedish (sv_SE) included.
 
 == Upgrade Notice ==
+
+= 1.1.7 =
+SKU search actually works now. It was advertised but never functional — only product names were searched. Partial and case-insensitive SKU matching included, variation SKUs too.
 
 = 1.1.6 =
 Free plugin now focuses on stock editing only. Pro purchase and license flow moved to the Pro landing page and the Pro plugin's own License tab. Existing Pro installs keep working unchanged.
