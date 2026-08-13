@@ -1,6 +1,6 @@
-=== Jalma Inline Stock Editor ===
+=== Inline Stock Editor for WooCommerce – Bulk Edit Stock Quantities ===
 Contributors: jonashjalmarsson
-Tags: woocommerce, stock, inventory, bulk edit, low stock
+Tags: bulk edit, stock management, inventory, low stock, woocommerce
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
@@ -8,13 +8,21 @@ Stable tag: 1.1.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Edit WooCommerce stock quantities and low-stock thresholds from a single table — no more clicking into each product.
+Edit WooCommerce stock quantities and low-stock thresholds from one table. Inline auto-save, variations, category filter, SKU search.
 
 == Description ==
 
-**Jalma Inline Stock Editor for WooCommerce** replaces WooCommerce's per-product click-fest with a single table where you can update stock quantities and low-stock thresholds for all your products at once. Inline edit, keyboard navigation, category filter, variation support.
+Updating stock in WooCommerce means opening a product, scrolling to Inventory, typing a number, saving, going back. Twenty products in and you have spent twenty minutes on twenty numbers.
 
-Ideal for shops that do weekly inventory counts, quick post-delivery updates, manual adjustments, or stock management for hundreds of products.
+This plugin puts every product in one table. Click a stock field, type, tab to the next. It saves as you go — no bulk-edit screen, no save button, no leaving the page.
+
+Built for the boring jobs: the weekly count, the delivery that just landed, the shelf someone miscounted.
+
+= Also works on =
+
+* **Low-stock thresholds** in the same table, with the WooCommerce global shown as the placeholder so you can see what you are overriding.
+* **Variable products** — flip a product to per-variation stock and the variations expand inline, editable in place.
+* **Large catalogs** — category filter, search by name or SKU, pagination.
 
 = Features =
 
