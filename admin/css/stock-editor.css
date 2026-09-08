@@ -53,7 +53,7 @@
 }
 
 .jise-variation-arrow {
-	color: #9ca3af;
+	color: #6b7280;
 	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 	font-size: 14px;
 }
@@ -102,8 +102,11 @@
 	margin-top: 2px;
 }
 
+/* Arende #356: #9ca3af ar 2,54:1 mot vitt - under kravet 4,5. Att en
+   produkt saknar SKU ar ett FAKTUM om raden, inte dekor, och den bar
+   dessutom kursiv 13px ovanpa. #6b7280 ger 4,83:1 och anvands redan har. */
 .jise-no-sku {
-	color: #9ca3af;
+	color: #6b7280;
 	font-style: italic;
 }
 
@@ -157,12 +160,12 @@
 }
 
 .jise-threshold-input::placeholder {
-	color: #9ca3af;
+	color: #6b7280;
 	font-style: italic;
 }
 
 .jise-muted {
-	color: #9ca3af;
+	color: #6b7280;
 	font-style: italic;
 	font-size: 13px;
 }
@@ -237,4 +240,31 @@
 
 .jise-wrap .select2-container--default .select2-selection--single .select2-selection__rendered {
 	line-height: 32px;
+}
+
+/* ---------------------------------------------------------------------------
+   Smal skarm: SKU FORE titeln pa variationsrader.
+   Arende #356 (Dessi): vid 390px far produktkolumnen ~72px och variationsrader
+   bryts till ett ord per rad - "The / Quiet / Atlas", "SKU: / BK- / V01-HC".
+   Just variationer delar namn och skiljs ENBART av sin SKU, sa det som
+   identifierar raden ska komma forst. Bara variationsrader: pa vanliga
+   produktrader ar titeln det som identifierar.
+   DOM-ordningen ar orord - det ar en visuell omkastning, sa skarmlasare far
+   fortfarande titel fore SKU.
+   --------------------------------------------------------------------------- */
+@media screen and (max-width: 782px) {
+	.jise-row-variation .jise-product-meta {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.jise-row-variation .jise-product-sku {
+		order: -1;
+		margin-top: 0;
+		font-weight: 600;
+	}
+
+	.jise-row-variation .jise-product-title {
+		margin-top: 2px;
+	}
 }

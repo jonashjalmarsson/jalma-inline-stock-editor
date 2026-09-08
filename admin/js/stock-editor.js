@@ -234,7 +234,16 @@
 	function renderTable(products) {
 		var $tbody = $('#jise-tbody').empty();
 		if (!products || products.length === 0) {
-			$tbody.append('<tr><td colspan="5" class="jise-empty">' + escapeHtml(S.noResults) + '</td></tr>');
+			// Arende #356 (Dessi): tomma tillstandet sa bara "inga traffar" och
+			// lamnade anvandaren utan vag vidare. Knappen visas bara nar det
+			// FINNS ett filter att rensa - annars vore den en atgard utan verkan.
+			var filtered = !!(state.search || state.category || state.stockStatus);
+			var html = '<tr><td colspan="5" class="jise-empty">' + escapeHtml(S.noResults);
+			if (filtered) {
+				html += ' <button type="button" class="button-link jise-clear-filters">'
+					+ escapeHtml(S.clearFilters) + '</button>';
+			}
+			$tbody.append(html + '</td></tr>');
 			return;
 		}
 		products.forEach(function (p) {
@@ -345,6 +354,18 @@
 		$(document).on('change', '.jise-filter-stock-status', function () {
 			state.stockStatus = $(this).val() || '';
 			state.page = 1;
+			load();
+		});
+
+		// Arende #356: rensa alla filter fran tomma tillstandet.
+		$(document).on('click', '.jise-clear-filters', function () {
+			state.search = '';
+			state.category = 0;
+			state.stockStatus = '';
+			state.page = 1;
+			$('.jise-filter-search').val('');
+			$('.jise-filter-category').val('0');
+			$('.jise-filter-stock-status').val('');
 			load();
 		});
 

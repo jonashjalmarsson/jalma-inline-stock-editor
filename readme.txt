@@ -4,7 +4,7 @@ Tags: bulk edit, stock management, inventory, low stock, woocommerce
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.8
+Stable tag: 1.1.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,6 +73,11 @@ Not in the free version. A stock adjustment log is planned for the Pro version.
 3. Category filter and search.
 
 == Changelog ==
+
+= 1.1.9 =
+* The empty state has a way out. "No products match your filters" now offers a Clear filters button — but only when a filter is actually set, so it never appears as an action with no effect.
+* Variations show their SKU first on a narrow screen. At 390 px the product column gets about 72 px and a variation row broke into one word per line; since variations share a name and are told apart only by their SKU, that is what identifies the row. Visual order only — the markup is unchanged, so screen readers still read the title first.
+* Muted text is readable. #9ca3af measured 2.54:1 against white, below the 4.5 requirement, and carried italic 13px on top of that. Now #6b7280 at 4.83:1 — a colour already used in the same file, so no new value was introduced. Affects the "no SKU" marker, the muted note, the threshold placeholder and the variation arrow.
 
 = 1.1.8 =
 * The Pro upgrade box now offers a direct download of the Pro add-on's .zip alongside the existing link to its plugin page, so you can install Pro and buy the license from inside it if you prefer. Both are plain links — this plugin still installs, activates and downloads nothing on your behalf, and contacts no external server of its own.

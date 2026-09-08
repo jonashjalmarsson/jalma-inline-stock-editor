@@ -65,6 +65,7 @@ class JISE_Admin_Page {
 				'globalHint'         => __( '%d (global)', 'jalma-inline-stock-editor' ),
 				'loading'            => __( 'Loading products…', 'jalma-inline-stock-editor' ),
 				'noResults'          => __( 'No products match your filters.', 'jalma-inline-stock-editor' ),
+				'clearFilters'       => __( 'Clear filters', 'jalma-inline-stock-editor' ),
 				'trackStock'         => __( 'Track stock', 'jalma-inline-stock-editor' ),
 				'actions'            => __( 'Stock tracking', 'jalma-inline-stock-editor' ),
 				'notTracked'         => __( 'Not tracked', 'jalma-inline-stock-editor' ),

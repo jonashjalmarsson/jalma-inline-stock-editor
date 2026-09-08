@@ -3,7 +3,7 @@
  * Plugin Name: Jalma Inline Stock Editor
  * Plugin URI: https://wordpress.org/plugins/jalma-inline-stock-editor/
  * Description: Edit WooCommerce stock quantities and low-stock thresholds directly from a single table — no more clicking into each product. Inline edit, keyboard navigation, category filter, full variation support.
- * Version: 1.1.8
+ * Version: 1.1.9
  * Author: jonashjalmarsson
  * Author URI: https://jonashjalmarsson.se
  * License: GPLv2 or later
@@ -33,7 +33,7 @@ add_action( 'before_woocommerce_init', function () {
 	}
 } );
 
-define( 'JISE_VERSION', '1.1.8' );
+define( 'JISE_VERSION', '1.1.9' );
 define( 'JISE_SLUG', 'jalma-inline-stock-editor' );
 define( 'JISE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'JISE_URL', plugin_dir_url( __FILE__ ) );
