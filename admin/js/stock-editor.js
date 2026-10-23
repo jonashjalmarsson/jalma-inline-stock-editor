@@ -364,7 +364,7 @@
 			state.stockStatus = '';
 			state.page = 1;
 			$('.jise-filter-search').val('');
-			$('.jise-filter-category').val('0');
+			$('.jise-filter-category').val('0').trigger('change.select2'); // select2 visar annars gamla valet
 			$('.jise-filter-stock-status').val('');
 			load();
 		});
